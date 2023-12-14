@@ -1,0 +1,105 @@
+.dashboard {
+  padding: 50px 0px;
+  min-height: 100vh;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
+
+.dashboard h2 {
+  font-size: 30px;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 50px;
+}
+
+ngb-progressbar.progress {
+  background-color: #08244e;
+  height: 30px;
+  border-radius: 0;
+}
+
+.progress-bar {
+  width: 100% !important;
+  background-color: transparent !important;
+}
+
+::ng-deep .progress-bar {
+  width: 100% !important;
+  background-color: transparent !important;
+}
+
+.stat {
+  position: relative;
+}
+.stat::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 185px;
+  background: #999;
+  width: 3px;
+  height: 100%;
+}
+
+.stat h3 {
+  width: 200px;
+}
+
+.stat h4 {
+  position: relative;
+  margin-left: 35px;
+}
+
+.filters ul {
+  margin-bottom: 0px;
+}
+
+.filters ul li {
+  margin-bottom: 1rem;
+}
+.filters ul li button {
+  margin: 0px 10px;
+}
+.filters ul li button {
+  color: rgb(7 34 73);
+  font-weight: 500;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  line-height: 36px;
+  padding: 0 16px;
+  border-radius: 4px;
+  box-shadow: 0px 0px 1px 1px #dbdbdb;
+  background: #fff;
+  letter-spacing: 0.5px;
+}
+.filters ul li button.active {
+  background-color: rgb(7 34 73);
+  color: #fff;
+}
+
+.topH {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.visitsBtn {
+  position: absolute;
+  bottom: -20px;
+  right: 50px;
+  background-color: #ffbe66;
+  padding: 5px;
+  max-width: 150px;
+  font-size: 17px;
+  font-weight: 500;
+  border: 2px solid #072249;
+  border-radius: 3px;
+  transition: 0.3s all ease-in-out;
+}
+
+.visitsBtn:hover {
+  transform: translateY(3px);
+}

@@ -1,0 +1,77 @@
+.visit-details {
+  padding: 50px 0px;
+  min-height: 100vh;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
+
+.visit-details h2 {
+  font-size: 30px;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 50px;
+}
+
+.table-box {
+  overflow-x: scroll;
+  box-shadow: 0px 0px 24px 6px #ccc;
+}
+
+table {
+  text-align: center;
+  vertical-align: middle;
+  min-width: max-content;
+  margin-bottom: 0;
+}
+
+table thead tr th {
+  background: #001828;
+  color: #fff;
+  padding: 16px;
+}
+
+.dp-hidden {
+  width: 0;
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+.custom-day {
+  text-align: center;
+  padding: 0.185rem 0.25rem;
+  display: inline-block;
+  height: 2rem;
+  width: 2rem;
+}
+.custom-day.focused {
+  background-color: #e6e6e6;
+}
+.custom-day.range,
+.custom-day:hover {
+  background-color: rgb(2, 117, 216);
+  color: white;
+}
+.custom-day.faded {
+  background-color: rgba(2, 117, 216, 0.5);
+}
+
+.trackBtn {
+  position: absolute;
+  top: 0px;
+  right: 50px;
+  background-color: #ffbe66;
+  padding: 6px 16px;
+  max-width: 150px;
+  font-size: 17px;
+  font-weight: 500;
+  border: 2px solid #072249;
+  border-radius: 3px;
+  transition: 0.3s all ease-in-out;
+}
+
+.trackBtn:hover {
+  transform: translateY(3px);
+}

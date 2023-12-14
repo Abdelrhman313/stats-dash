@@ -1,0 +1,14 @@
+<div class="groups">
+  <h2>Groups</h2>
+  <div class="container">
+    <div class="row w-100 justify-content-center align-items-center">
+      <ng-container *ngFor="let group of groups">
+        <div class="col-md-4 mb-5 mb-md-0" (click)="goToDashboard(group)">
+          <div class="group">
+            {{group}}
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

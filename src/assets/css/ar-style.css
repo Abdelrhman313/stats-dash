@@ -1,0 +1,100 @@
+*:not(i, img) {
+  font-family: var(--arabic-font) !important;
+}
+
+/* html,
+body { */
+/* transition: all 1s linear; */
+/* direction: rtl; */
+/* } */
+
+/* To Top Buttton */
+.to-top {
+  right: auto !important;
+  left: -250px;
+}
+
+.to-top.show {
+  left: 25px !important;
+  right: auto !important;
+}
+
+/* Navbar[header] */
+nav .dropdown-menu {
+  right: auto !important;
+  /* left: 10px !important; */
+  left: 0px !important;
+}
+
+nav .dropdown-menu::before {
+  right: auto !important;
+  left: 10px !important;
+}
+
+.checkbox {
+  margin-inline-end: 0px;
+  margin-inline-end: 30px;
+}
+
+.checkbox .checkbox-content .box.checked .cycle {
+  transform: translateX(0%) !important;
+}
+
+/* SideBar */
+/* .vertival-sidebar .sidebar-container .sidebar-header {
+  padding: 5px 10px 5px 0px !important;
+} */
+
+.vertival-sidebar .dropdown-toggle::after {
+  left: 20px;
+  right: auto !important;
+}
+
+.vertival-sidebar .sidebar-container .sidebar-content ul li a.active {
+  /* border-left: none !important;
+  border-right: 6px solid var(--base-color) !important; */
+}
+
+@media (min-width: 1200px) {
+  .vertival-sidebar .sidebar-container .sidebar-header {
+    padding-bottom: 20px !important;
+  }
+}
+
+/* Setting Box */
+.setting-box .active-base::after,
+.setting-box .active-secondary::after {
+  content: "\f060" !important;
+  left: 25px !important;
+}
+
+.setting-box h1::after {
+  bottom: -10px !important;
+}
+
+.setting-box-toggler {
+  right: auto !important;
+  inset-inline-start: 0px;
+  border-radius: 0px 5px 5px 0px !important;
+}
+
+.setting-box {
+  inset-inline-start: 0px;
+  right: auto !important;
+  border-inline-end: 4px solid var(--base-color);
+}
+
+.setting-box.hide {
+  clip-path: ellipse(0% 51% at -97% -49%) !important;
+}
+
+/* Main Content Section */
+.main-body .main-content {
+  left: auto;
+  inset-inline-end: 230px;
+}
+
+.main-body .full-screen {
+  /* left: auto !important; */
+  inset-inline-end: 0px !important;
+}

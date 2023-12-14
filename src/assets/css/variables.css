@@ -1,0 +1,12 @@
+:root {
+  --base-color: #0a6dca;
+  --second-color: #d3942b;
+  --light-color: #aaccec;
+  --black-color: #333333;
+  --gray-color: #818181;
+  --gray-bg-color: #f4faff;
+  --gray-icon-color: #f4faff83;
+  --arabic-font: "Cairo", sans-serif;
+  --english-font: "Raleway", sans-serif;
+  --base-font-size: 1rem;
+}

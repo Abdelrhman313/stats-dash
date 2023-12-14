@@ -1,0 +1,393 @@
+@page {
+  counter-increment: page;
+  counter-reset: page 1;
+  margin: 1cm;
+  size: A3;
+}
+
+@media print {
+  body {
+      padding: 40px 0;
+      width: 100%;
+      border: 0;
+      margin: 10;
+      padding: 10;
+  }
+
+  .rtls h1,
+  .rtls h2,
+  .rtls h3,
+  .rtls h4,
+  .rtls h5,
+  .rtls h6,
+  .rtls p,
+  .rtls {
+      font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+      direction: rtl;
+  }
+
+  *,
+  ::after,
+  ::before {
+      box-sizing: border-box;
+  }
+
+  *, :after, :before {
+      text-shadow: none!important;
+      background: 0 0!important;
+      -webkit-box-shadow: none!important;
+      box-shadow: none!important;
+  }
+
+
+  /* body,
+  body * {
+      visibility: hidden !important;
+  }
+
+  .printable-div * {
+      visibility: visible !important;
+  } */
+
+  .printable-div {
+      width: 100%;
+      margin: 0;
+      float: none;
+      background-color: white;
+      visibility: visible !important;
+      position: relative;
+      right: 0 !important;
+      top: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      min-width: 100%;
+      -webkit-print-color-adjust: exact;
+  }
+
+
+  .modal .modal-dialog {
+      margin: 0 !important;
+      padding: 0 !important;
+      right: 0;
+      top: 0 !important;
+      min-width: 100% !important;
+  }
+
+  .printable-div .row .col-md-6,
+  .printable-div .row .col-lg-6,
+  .printable-div .row .col-6 {
+      width: 49% !important;
+      display: inline-block;
+  }
+
+  .row {
+      display: flex;
+      flex-wrap: wrap;
+  }
+
+  .col,
+  .col-1,
+  .col-10,
+  .col-11,
+  .col-12,
+  .col-2,
+  .col-3,
+  .col-4,
+  .col-5,
+  .col-6,
+  .col-7,
+  .col-8,
+  .col-9,
+  .col-auto,
+  .col-lg,
+  .col-lg-1,
+  .col-lg-10,
+  .col-lg-11,
+  .col-lg-12,
+  .col-lg-2,
+  .col-lg-3,
+  .col-lg-4,
+  .col-lg-5,
+  .col-lg-6,
+  .col-lg-7,
+  .col-lg-8,
+  .col-lg-9,
+  .col-lg-auto,
+  .col-md,
+  .col-md-1,
+  .col-md-10,
+  .col-md-11,
+  .col-md-12,
+  .col-md-2,
+  .col-md-3,
+  .col-md-4,
+  .col-md-5,
+  .col-md-6,
+  .col-md-7,
+  .col-md-8,
+  .col-md-9,
+  .col-md-auto,
+  .col-sm,
+  .col-sm-1,
+  .col-sm-10,
+  .col-sm-11,
+  .col-sm-12,
+  .col-sm-2,
+  .col-sm-3,
+  .col-sm-4,
+  .col-sm-5,
+  .col-sm-6,
+  .col-sm-7,
+  .col-sm-8,
+  .col-sm-9,
+  .col-sm-auto,
+  .col-xl,
+  .col-xl-1,
+  .col-xl-10,
+  .col-xl-11,
+  .col-xl-12,
+  .col-xl-2,
+  .col-xl-3,
+  .col-xl-4,
+  .col-xl-5,
+  .col-xl-6,
+  .col-xl-7,
+  .col-xl-8,
+  .col-xl-9,
+  .col-xl-auto {
+      position: relative;
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 15px;
+  }
+
+
+  .col-md-1,
+  .col-md-10,
+  .col-md-11,
+  .col-md-12,
+  .col-md-2,
+  .col-md-3,
+  .col-md-4,
+  .col-md-5,
+  .col-md-6,
+  .col-lg-6,
+  .col-6,
+  .col-md-7,
+  .col-md-8,
+  .col-md-9 {
+
+      padding: 0
+  }
+
+  .col-md-12 {
+      width: 100%
+  }
+
+  .col-md-11 {
+      width: 91.66666667%
+  }
+
+  .col-md-10 {
+      width: 83.33333333%
+  }
+
+  .col-md-9 {
+      width: 75%
+  }
+
+  .col-md-8 {
+      width: 66.66666667%
+  }
+
+  .col-md-7 {
+      width: 58.33333333%
+  }
+
+  .col-md-6,
+  .col-lg-6,
+  .col-6 {
+      flex: 0 0 50%;
+      max-width: 50%;
+  }
+
+  .col-md-5,
+  .col-sm-5 {
+      width: 41.66666667%
+  }
+
+  .col-md-4,
+  .col-lg-4 {
+      width: 33.33333333%
+  }
+
+  .col-md-3 {
+      width: 25%
+  }
+
+  .col-md-2 {
+      width: 16.66666667%
+  }
+
+  .col-md-1 {
+      width: 8.33333333%
+  }
+
+  .align-items-start {
+      align-items: flex-start !important;
+  }
+
+  .justify-content-between {
+      justify-content: space-between !important;
+  }
+
+  .d-flex {
+      display: flex !important;
+  }
+
+  .table-responsive {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+  }
+
+  .table {
+      width: 100%;
+      margin-bottom: 1rem;
+      color: #212529;
+  }
+
+  .table thead tr th {
+      text-transform: uppercase;
+      font-weight: 500;
+      font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+      font-size: 10.5px;
+      letter-spacing: 0.06em;
+      padding-top: 14px;
+      padding-bottom: 14px;
+      vertical-align: middle;
+      border-bottom: 1px solid #000;
+      color: #000;
+      border-top: none;
+  }
+
+  .text-right {
+      text-align: end !important;
+  }
+
+  .text-left {
+      text-align: start !important;
+  }
+
+  .no-border {
+      border: none !important;
+  }
+
+  .table tbody tr td {
+      background: #fff;
+      color: #000;
+      border-bottom: 1px solid #000;
+      border-top: 0px;
+      font-size: 13.5px;
+  }
+
+  .text-center {
+      text-align: center !important;
+  }
+
+
+  tr,
+  th,
+  td {
+      page-break-inside: avoid !important;
+      page-break-after: auto;
+  }
+
+  .no-margin {
+      margin: 0px !important;
+  }
+
+  .no-padding {
+      padding: 0px !important;
+  }
+
+  .ml-auto {
+      margin-right: 0 !important;
+      margin-left: auto !important;
+  }
+
+  .rtls .ml-auto {
+      margin-right: auto !important;
+      margin-left: 0 !important;
+  }
+
+  .bold {
+      font-weight: 600 !important;
+  }
+
+  .hidden {
+      page-break-after:avoid;
+
+  }
+
+
+  .ngx-datatable {
+      width: 100%;
+      display: table;
+      page-break-inside: auto;
+      page-break-after: always;
+  }
+  .datatable-header {
+      display: table-header-group;
+      text-align: center;
+      font-weight: bold;
+      page-break-after:avoid;
+
+  }
+
+  .datatable-header-inner {
+      display: table-header-group;
+      background-color: gray;
+      font-weight: bold;
+
+  }
+
+  .datatable-header-cell{
+      display: table-cell;
+      padding: 10px;
+      text-align: justify;
+      border-bottom: 1px solid black;
+
+  }
+  .datatable-body {
+      display: table-row-group;
+      page-break-inside: avoid;
+      page-break-after: auto;
+
+  }
+
+  .datatable-body-row {
+      display: table-row;
+
+      page-break-inside: avoid;
+  }
+
+  .datatable-body-cell{
+      display: table-cell;
+      border-bottom: 1px solid black;
+      padding: 8px;
+      line-height: 1.42857143;
+      vertical-align: top;
+  }
+
+  .page-count {
+      display: none;
+  }
+  .m-t-0 {
+      margin-top: 0px;
+  }
+  .semi-bold {
+      font-weight: 500 !important;
+}
+}

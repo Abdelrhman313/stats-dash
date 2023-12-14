@@ -1,0 +1,63 @@
+<div class="dashboard position-relative">
+  <div class="container">
+    <div class="head">
+      <h2 class="text-center">DashBoard</h2>
+
+      <div class="filters mb-5">
+        <ul class="list-unstyled d-flex w-100 justify-content-center align-items-center flex-wrap">
+          <li>
+            <button [disabled]="loading" type="button" (click)="filter('Today'); active = 1"
+              class="{{ active == 1 ? 'active' : '' }}">Today</button>
+          </li>
+          <li>
+            <button [disabled]="loading" type="button" (click)="filter('Week'); active = 2"
+              class="{{ active == 2 ? 'active' : '' }}">Week</button>
+          </li>
+          <li>
+            <button [disabled]="loading" type="button" (click)="filter('Month'); active = 3"
+              class="{{ active == 3 ? 'active' : '' }}">Month</button>
+          </li>
+          <li>
+            <button [disabled]="loading" type="button" (click)="filter('Three Months'); active = 4"
+              class="{{ active == 4 ? 'active' : '' }}">Three
+              Months</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- loading state -->
+    <ng-container *ngIf="loading">
+      <app-loading></app-loading>
+    </ng-container>
+
+    <!-- empty state -->
+    <ng-container *ngIf="(!exist || !usersStats?.length) && !loading">
+      <div class="card card-transparent m-auto" style="max-width: max-content;">
+        <div class="card-body text-center empty-state">
+          <img src="/assets/empty.svg" width="100" height="100" alt="img" />
+          <h2 class="semi-bold my-3">No Data matches .. Try Again!</h2>
+          <button class="btn btn-primary" type="button" (click)="goToGroups()">Back</button>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- display data -->
+    <ng-container *ngIf="exist && usersStats?.length && !loading">
+      <div class="stats position-relative">
+        <ng-container *ngFor="let item of usersStats">
+          <div class="d-flex align-items-center stat py-2">
+            <h3 class="mb-0">{{item?.user?.username??'Null'}}</h3>
+            <div [style.width]="((((item?.count / usersStats[0]?.count) * 100)*700) / 100) + 'px'"
+              style="max-width: 700px;">
+              <ngb-progressbar [value]="100" [striped]="true" />
+            </div>
+            <h4 class="mb-0">{{item?.count}} </h4>
+          </div>
+        </ng-container>
+        <h3 class="topH">{{group + ' '}} Top 10 Visits</h3>
+        <button class="btn visitsBtn" (click)="goToVisitDetails()">See Visits In Details</button>
+      </div>
+    </ng-container>
+  </div>
+</div>

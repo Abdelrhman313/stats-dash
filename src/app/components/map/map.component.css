@@ -1,0 +1,19 @@
+agm-map {
+  height: 600px;
+}
+.map {
+  padding: 50px 0px;
+}
+.map h2 {
+  font-size: 30px;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.map .box {
+  box-shadow: 0px 0px 1px 1px #dbdbdb;
+}

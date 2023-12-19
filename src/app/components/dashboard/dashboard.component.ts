@@ -41,6 +41,7 @@ export class DashboardComponent implements OnInit {
   loading = true
 
   group: any
+  group2: any
   exist: any
 
   firestore: Firestore = inject(Firestore);
@@ -69,6 +70,7 @@ export class DashboardComponent implements OnInit {
 
     if (localStorage.getItem('group')) {
       this.group = localStorage.getItem('group');
+      this.group2 = localStorage.getItem('group');
     } else {
       this.router.navigateByUrl('groups');
     }
@@ -100,11 +102,10 @@ export class DashboardComponent implements OnInit {
 
   checkGroupExist(groups: any) {
     let find = groups?.findIndex((group: any) => group?.display_name?.toLowerCase() == this.group?.toLowerCase())
-    if (find >= 0) { this.exist = true } else { this.exist = false }
+    if (find >= 0) { this.exist = true; this.group = groups[find]?.name; } else { this.exist = false }
   }
 
   getAllCompletedVisits() {
-    this.loading = true
 
     const itemCollection = collection(this.firestore, 'completed visits');
     this.completedVisitsCollection = collectionData(itemCollection);
@@ -138,6 +139,7 @@ export class DashboardComponent implements OnInit {
 
       this.getAllUsers(this.reduceVisitsAndGroupUsers)
     })
+
   }
 
   allSystemUsers: any
@@ -248,8 +250,13 @@ export class DashboardComponent implements OnInit {
 
   goToVisitDetails() {
 
-    localStorage.setItem('group', this.group)
+    localStorage.setItem('group', this.group2)
 
     this.router.navigateByUrl('visit-details');
+  }
+
+  back() {
+    history.back()
+    localStorage.removeItem('group')
   }
 }

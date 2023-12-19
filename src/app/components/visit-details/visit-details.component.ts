@@ -26,7 +26,9 @@ export class VisitDetailsComponent implements OnInit {
 
   maxDate = { year: new Date().getFullYear(), month: new Date().getUTCMonth() + 1, day: new Date().getDate() }
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {
+    localStorage.removeItem('visits')
+  }
 
   ngOnInit(): void {
     this.getAllUsersData()
@@ -47,7 +49,7 @@ export class VisitDetailsComponent implements OnInit {
             visit: visit,
           }
         });
-        this.visits = data;
+        this.visits?.push(...data);
       });
 
       localStorage.setItem('visits', JSON.stringify(this.visits))
@@ -167,4 +169,8 @@ export class VisitDetailsComponent implements OnInit {
     this.router.navigateByUrl('tracking');
   }
 
+  back() {
+    history.back()
+    localStorage.removeItem('visits')
+  }
 }

@@ -137,4 +137,7 @@ export class MapComponent implements OnInit {
     });
   }
 
+  back() {
+    history.back()
+  }
 }

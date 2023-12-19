@@ -1,4 +1,6 @@
 <div class="dashboard position-relative">
+  <button class="btn btn-outline-secondary backBtn" (click)="back() ">Back </button>
+
   <div class="container">
     <div class="head">
       <h2 class="text-center">DashBoard</h2>
@@ -55,7 +57,7 @@
             <h4 class="mb-0">{{item?.count}} </h4>
           </div>
         </ng-container>
-        <h3 class="topH">{{group + ' '}} Top 10 Visits</h3>
+        <h3 class="topH">{{group2 + ' '}} Top 10 Visits</h3>
         <button class="btn visitsBtn" (click)="goToVisitDetails()">See Visits In Details</button>
       </div>
     </ng-container>

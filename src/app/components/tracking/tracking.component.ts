@@ -126,4 +126,7 @@ export class TrackingComponent implements OnInit {
     this.router.navigateByUrl('dashboard');
   }
 
+  back() {
+    history.back()
+  }
 }

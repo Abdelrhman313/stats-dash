@@ -1,7 +1,10 @@
 import { MapsAPILoader } from '@agm/core';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 
 import { Firestore, collectionData, collection, Timestamp, FirestoreModule, FirestoreError } from '@angular/fire/firestore';
+import { icon, latLng, marker, polygon, tileLayer } from 'leaflet';
+
+import * as L from "leaflet";
 
 declare const google: any;
 
@@ -30,14 +33,20 @@ export class MapComponent implements OnInit {
 
   systemPointsCollection: any
   systemPoints: any
-  paths: any
-  constructor(private mapsAPILoader: MapsAPILoader) {
+  paths: any[] = []
+
+  mapOptions: any;
+  constructor(private cdref: ChangeDetectorRef) {
     this.getAllUsersData()
     this.getAllPoints()
   }
 
   ngOnInit(): void {
 
+  }
+
+  ngAfterContentChecked() {
+    this.cdref.detectChanges();
   }
 
   getAllUsersData() {
@@ -49,7 +58,6 @@ export class MapComponent implements OnInit {
         lng: this.user?.lon
       }
 
-      this.onMapReady(this.map);
       this.exist = true
     } else {
       this.exist = false
@@ -77,12 +85,24 @@ export class MapComponent implements OnInit {
           }
         })
 
-        this.paths = this.systemPoints?.map((item: any) => {
-          return {
-            lat: item?.lat,
-            lng: item?.lon
-          }
+        this.systemPoints?.forEach((item: any) => {
+          this.paths?.push([item?.lat, item?.lon])
         })
+
+        this.mapOptions = {
+          layers: [
+            tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' }),
+            marker([this.mapCenterPosition?.lat, this.mapCenterPosition?.lng], {
+              icon: icon({
+                iconUrl: '/assets/location.png',
+                className:'main-marker'
+              }),
+            }),
+
+          ],
+          zoom: 12,
+          center: latLng(this.mapCenterPosition?.lat, this.mapCenterPosition?.lng)
+        };
 
         this.loading = false;
       },
@@ -93,51 +113,30 @@ export class MapComponent implements OnInit {
     })
   }
 
-  onMapReady(map: google.maps.Map) {
-    this.map = map
-    this.drawPolygon()
-    this.loadAllMarkers()
-  }
-
-  drawPolygon() {
-
-    if (this.paths?.length) {
-      const polygon = new google.maps.Polygon({
-        paths: this.paths,
-        editable: true,
-        draggable: true,
-      })
-
-      polygon.setMap(this.map)
-    }
-  }
-
-  loadAllMarkers(): void {
-    this.mapsAPILoader.load().then(() => {
-
-      this.markers?.forEach((markerInfo: any) => {
-        //Creating a new marker object
-        const marker = new google.maps.Marker({
-          ...markerInfo
-        });
-
-        //creating a new info window with markers info
-        const infoWindow = new google.maps.InfoWindow({
-          content: marker.getTitle()
-        });
-
-        //Add click event to open info window on marker
-        marker.addListener("click", () => {
-          infoWindow.open(marker.getMap(), marker);
-        });
-
-        //Adding marker to google map
-        marker.setMap(this.map);
-      });
-    });
-  }
-
   back() {
     history.back()
+  }
+
+
+  onMapReady2(map: L.Map) {
+    let markers: any[] = []
+
+    for (let index = 0; index < this.paths?.length; index++) {
+      markers.push(marker(this.paths[index], {
+        icon: icon({
+          iconUrl: '/assets/pin.png',
+        }),
+      }))
+    }
+
+    const group = L.featureGroup(markers);
+
+    group.addTo(map);
+
+    map.fitBounds(group.getBounds());
+
+    let polyline = L.polyline(this.paths, { color: '#101828' }).addTo(map);
+
+    map.fitBounds(polyline.getBounds());
   }
 }

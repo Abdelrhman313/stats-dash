@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { Firestore, collectionData, collection, Timestamp, FirestoreModule, FirestoreError } from '@angular/fire/firestore';
+import { catchError, of, throwError } from 'rxjs';
 
 const moment = require('moment');
 
@@ -59,15 +60,9 @@ export class DashboardComponent implements OnInit {
   usersStats: any
 
   active: any = 1
-  constructor(private apiService: ApiService, private router: Router) {
-    // this.apiService.selectedGroup.subscribe((res) => {
-    //   if (res) {
-    //     this.group = res
-    //   } else {
-    //     this.router.navigateByUrl('groups');
-    //   }
-    // })
 
+  width: any
+  constructor(private router: Router) {
     if (localStorage.getItem('group')) {
       this.group = localStorage.getItem('group');
       this.group2 = localStorage.getItem('group');
@@ -77,8 +72,29 @@ export class DashboardComponent implements OnInit {
 
     this.getDashboardGroups()
 
-
+    if (window.innerWidth > 575 && window.innerWidth < 768) {
+      this.width = 240
+    } else if (window.innerWidth > 768 && window.innerWidth < 992) {
+      this.width = 540
+    } else if (window.innerWidth < 575) {
+      this.width = window.innerWidth - 75
+    } else {
+      this.width = 700
+    }
+    window.onresize = () => {
+      if (window.innerWidth > 575 && window.innerWidth < 768) {
+        this.width = 240
+      } else if (window.innerWidth > 768 && window.innerWidth < 992) {
+        this.width = 540
+      } else if (window.innerWidth < 575) {
+        this.width = window.innerWidth - 75
+      } else {
+        this.width = 700
+      }
+    };
   }
+
+
 
   ngOnInit(): void {
     this.getAllCompletedVisits()
@@ -98,6 +114,22 @@ export class DashboardComponent implements OnInit {
         this.getDashboardGroups()
       }
     })
+
+    // pipe(
+    //   catchError(err => {
+    //     console.log('Handling error locally and rethrowing it...', err);
+    //     return throwError(err);
+    //   })
+    // ).subscribe({
+    //   next: (res: any) => {
+    //     this.systemGroups = res;
+    //     this.checkGroupExist(this.systemGroups);
+    //   },
+    //   error: (err: any) => {
+    //     this.getDashboardGroups()
+    //   }
+    // })
+
   }
 
   checkGroupExist(groups: any) {
@@ -122,6 +154,9 @@ export class DashboardComponent implements OnInit {
           break;
         case 4:
           this.completedVisits = res?.filter((visit: any) => this.isInLast3Months(visit?.completedDate));
+          break;
+        case 5:
+          this.completedVisits = res?.filter((visit: any) => this.isYesterDay(visit?.completedDate));
           break;
         default:
           this.completedVisits = res;
@@ -184,6 +219,9 @@ export class DashboardComponent implements OnInit {
 
   filter(value: any) {
     switch (value) {
+      case 'yesterday':
+        this.active = 5;
+        break;
       case 'Today':
         this.active = 1;
         break;
@@ -246,6 +284,16 @@ export class DashboardComponent implements OnInit {
 
 
     return result2 == 0
+  }
+
+  isYesterDay(dateToCheck: any) {
+    let SD = moment(dateToCheck, "DD/MM/YYYY"),
+      val2 = moment().format('DD/MM/YYYY').toString(),
+      TD = moment(val2, "DD/MM/YYYY");
+    let result2 = TD.diff(SD, 'days')
+
+
+    return result2 == 1
   }
 
   goToVisitDetails() {

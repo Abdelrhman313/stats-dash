@@ -3,10 +3,27 @@
 
   <h2>Map</h2>
   <div class="container">
-    <div class="box" *ngIf="!loading">
-      <agm-map [latitude]="mapCenterPosition?.lat" [longitude]="mapCenterPosition?.lng" [zoom]="10"
-        (mapReady)="onMapReady($event)">
-      </agm-map>
+    <!-- loading state -->
+    <ng-container *ngIf="loading">
+      <app-loading></app-loading>
+    </ng-container>
+
+    <!-- empty state -->
+    <ng-container *ngIf=" !paths?.length && !loading">
+      <div class="card card-transparent m-auto" style="max-width: max-content;">
+        <div class="card-body text-center empty-state">
+          <img src="/assets/empty.svg" width="100" height="100" alt="img" />
+          <h2 class="semi-bold my-3">No Data matches .. Try Again!</h2>
+          <button class="btn btn-primary" type="button" (click)="back()">Back</button>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="box" *ngIf="!loading && paths?.length">
+
+      <div style="height: 600px;" leaflet [leafletOptions]="mapOptions" [leafletZoom]="12" id="leafletmap"
+        (leafletMapReady)="onMapReady2($event)">
+      </div>
     </div>
   </div>
 </div>

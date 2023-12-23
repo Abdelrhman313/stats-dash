@@ -1,9 +1,11 @@
 agm-map {
   height: 600px;
 }
+
 .map {
   padding: 50px 0px;
 }
+
 .map h2 {
   font-size: 30px;
   text-transform: capitalize;
@@ -16,4 +18,16 @@ agm-map {
 
 .map .box {
   box-shadow: 0px 0px 1px 1px #dbdbdb;
+}
+
+::ng-deep img.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  top: -20px;
+  left: -20px;
+}
+
+::ng-deep path.leaflet-interactive {
+  fill: #0003;
 }

@@ -109,6 +109,7 @@ export class VisitDetailsComponent implements OnInit {
   }
   filterTypeValue: any
   resetFilter() {
+    this.filterTypeValue = 0
     this.filteredVisits = this.visits;
     this.fromDate = null
     this.toDate = null

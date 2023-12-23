@@ -20,6 +20,7 @@ import { LoginComponent } from './components/login/login.component';
 import { MapComponent } from './components/map/map.component';
 import { TrackingComponent } from './components/tracking/tracking.component';
 import { VisitDetailsComponent } from './components/visit-details/visit-details.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { VisitDetailsComponent } from './components/visit-details/visit-details.
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAFDqZGAUL-2wL_CAwq0noX9T_JX2cBoIA',
     }),
+    LeafletModule
   ],
   providers: [],
   bootstrap: [AppComponent],

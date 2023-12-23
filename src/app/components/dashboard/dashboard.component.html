@@ -5,11 +5,16 @@
     <div class="head">
       <h2 class="text-center">DashBoard</h2>
 
-      <div class="filters mb-5">
+      <div class="filters mb-4 mb-sm-5">
         <ul class="list-unstyled d-flex w-100 justify-content-center align-items-center flex-wrap">
+
           <li>
             <button [disabled]="loading" type="button" (click)="filter('Today'); active = 1"
               class="{{ active == 1 ? 'active' : '' }}">Today</button>
+          </li>
+          <li>
+            <button [disabled]="loading" type="button" (click)="filter('yesterday'); active = 5"
+              class="{{ active == 5 ? 'active' : '' }}">Yesterday</button>
           </li>
           <li>
             <button [disabled]="loading" type="button" (click)="filter('Week'); active = 2"
@@ -48,13 +53,17 @@
     <ng-container *ngIf="exist && usersStats?.length && !loading">
       <div class="stats position-relative">
         <ng-container *ngFor="let item of usersStats">
-          <div class="d-flex align-items-center stat py-2">
-            <h3 class="mb-0">{{item?.user?.username??'Null'}}</h3>
-            <div [style.width]="((((item?.count / usersStats[0]?.count) * 100)*700) / 100) + 'px'"
-              style="max-width: 700px;">
+          <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center stat py-2">
+            <div class="d-flex d-sm-none align-items-center justify-content-between flex-wrap w-100 mb-2">
+              <h3 class="m-0">{{item?.user?.username??'Null'}}</h3>
+              <h4 class="m-0">{{item?.count}} </h4>
+            </div>
+            <h3 class="mb-0 d-none d-sm-block">{{item?.user?.username??'Null'}}</h3>
+            <div [style.width]="((((item?.count / usersStats[0]?.count) * 100)*width) / 100) + 'px'"
+              style="max-width: 700px;" class="stat-bar">
               <ngb-progressbar [value]="100" [striped]="true" />
             </div>
-            <h4 class="mb-0">{{item?.count}} </h4>
+            <h4 class="mb-0 d-none d-sm-block">{{item?.count}} </h4>
           </div>
         </ng-container>
         <h3 class="topH">{{group2 + ' '}} Top 10 Visits</h3>

@@ -7,12 +7,12 @@
 
 
       <div class="filters row mb-4 align-items-end">
-        <div class="col-md-3">
+        <div class="col-md-3 mb-3 mb-md-0">
           <div class="form-group">
             <label for="filterType" class="form-label">Filter By</label>
             <select id="filterType" name="filterType" [(ngModel)]="filterTypeValue" #filterType="ngModel"
               (ngModelChange)="resetFilter();filterTypeValue = $event" class="form-control">
-              <option value="" disabled></option>
+              <option value="" disabled>----</option>
               <option value="1">Sales Person</option>
               <!-- <option value="2"> Date Of Visit</option> -->
 
@@ -20,7 +20,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" *ngIf="filterTypeValue == 1">
+        <div class="col-md-3 mb-3 mb-md-0" *ngIf="filterTypeValue == 1">
           <div class="form-group">
             <label for="SalesPerson" class="form-label">Sales Person</label>
             <input id="SalesPerson" name="SalesPerson" ngModel #SalesPerson="ngModel" class="form-control"

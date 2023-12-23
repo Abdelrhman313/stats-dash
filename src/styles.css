@@ -2,6 +2,9 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
+@import '~leaflet/dist/leaflet.css';
+
+
 * {
   margin: 0px;
   padding: 0px;
@@ -40,4 +43,39 @@
   left: 80px;
   top: 40px;
   z-index: 10000;
+}
+
+.table-box {
+  max-height: 660px;
+}
+
+.table-box table thead tr {
+  position: sticky;
+  top: 0;
+}
+
+.table-box table tbody tr {
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.table-box table tbody tr:hover * {
+  background: #ffecd2 !important;
+}
+
+
+@media (max-width: 768px) {
+  .backBtn {
+    left: 60px;
+    top: 50px;
+  }
+}
+
+@media (max-width: 575px) {
+
+  .backBtn {
+    left: 10px;
+    top: 10px;
+  }
+
 }

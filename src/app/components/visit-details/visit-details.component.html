@@ -7,12 +7,13 @@
 
       <button class="btn trackBtn" (click)="goToTracking() ">See Tracking</button>
 
-      <div class="filters row mb-4 align-items-end">
-        <div class="col-md-3">
+      <div class="filters row mb-2 mb-md-4 align-items-end">
+        <div class="col-md-3 mb-3 mb-md-0">
           <div class="form-group">
             <label for="filterType" class="form-label">Filter By</label>
-            <select id="filterType" name="filterType" ngModel #filterType="ngModel"
+            <select id="filterType" name="filterType" [(ngModel)]="filterTypeValue" #filterType="ngModel"
               (ngModelChange)="resetFilter();filterTypeValue = $event" class="form-control">
+              <option value="0" disabled>----</option>
               <option value="1">Sales Person</option>
               <option value="2"> Date Of Visit</option>
               <option value="3">Line </option>
@@ -23,7 +24,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" *ngIf="filterTypeValue == 1">
+        <div class="col-md-3 mb-3 mb-md-0" *ngIf="filterTypeValue == 1">
           <div class="form-group">
             <label for="SalesPerson" class="form-label">Sales Person</label>
             <input id="SalesPerson" name="SalesPerson" ngModel #SalesPerson="ngModel" class="form-control"
@@ -31,10 +32,10 @@
           </div>
         </div>
 
-        <div class="col-md-7" *ngIf="filterTypeValue == 2">
+        <div class="col-md-7 mb-3 mb-md-0" *ngIf="filterTypeValue == 2">
 
           <form class="row row-cols-sm-auto">
-            <div class="col-12">
+            <div class="col-12 w-100 mb-2">
               <label for="dateOfVisit" class="form-label"> From</label>
 
               <div class="dp-hidden position-absolute">
@@ -59,7 +60,7 @@
                 </button>
               </div>
             </div>
-            <div class="col-12">
+            <div class="col-12 w-100">
               <label for="dateOfVisit" class="form-label"> To</label>
 
               <div class="input-group">
@@ -79,7 +80,7 @@
         </div>
 
 
-        <div class="col-md-3" *ngIf="filterTypeValue == 3">
+        <div class="col-md-3 mb-3 mb-md-0" *ngIf="filterTypeValue == 3">
           <div class="form-group">
             <label for="Line" class="form-label"> Line </label>
             <input id="Line" name="Line" ngModel #Line="ngModel" class="form-control"
@@ -87,7 +88,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" *ngIf="filterTypeValue == 4">
+        <div class="col-md-3 mb-3 mb-md-0" *ngIf="filterTypeValue == 4">
           <div class="form-group">
             <label for="Class" class="form-label"> Class</label>
             <input id="Class" name="Class" ngModel #Class="ngModel" class="form-control"
@@ -95,7 +96,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" *ngIf="filterTypeValue == 5">
+        <div class="col-md-3 mb-3 mb-md-0" *ngIf="filterTypeValue == 5">
           <div class="form-group">
             <label for="Specialty" class="form-label"> Specialty</label>
             <input id="Specialty" name="Specialty" ngModel #Specialty="ngModel" class="form-control"
@@ -103,7 +104,7 @@
           </div>
         </div>
 
-        <div class="col-md-3" *ngIf="filterTypeValue == 6">
+        <div class="col-md-3 mb-3 mb-md-0" *ngIf="filterTypeValue == 6">
           <div class="form-group">
             <label for="Type" class="form-label"> Type</label>
             <input id="Type" name="Type" ngModel #Type="ngModel" class="form-control"
@@ -111,9 +112,9 @@
           </div>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-2 mb-3 mb-md-0">
           <button class="btn btn-secondary" *ngIf="filterTypeValue"
-            (click)="resetFilter(); filterTypeValue = null">Reset</button>
+            (click)="resetFilter(); filterTypeValue = 0">Reset</button>
         </div>
       </div>
     </div>
@@ -147,6 +148,7 @@
               <th scope="col">Classification</th>
               <th scope="col" style="max-width: 200px;">Address</th>
               <th scope="col">Date Of Visit</th>
+              <th scope="col">Time</th>
               <th scope="col">Date Of Next Visit</th>
               <th scope="col">Distribution</th>
               <th scope="col">Governorate</th>
@@ -170,6 +172,7 @@
                 <td>{{item?.visit?.classy ?item?.visit?.classy: '----'}}</td>
                 <td style="max-width: 200px;">{{item?.visit?.address ?item?.visit?.address: '----'}}</td>
                 <td>{{item?.visit?.dateOfVisit ?item?.visit?.dateOfVisit: '----'}}</td>
+                <td>{{item?.visit?.time ?item?.visit?.time: '----'}}</td>
                 <td>{{item?.visit?.dateOfNextVisit ?item?.visit?.dateOfNextVisit: '----'}}</td>
                 <td>{{item?.visit?.dist ?item?.visit?.dist: '----'}}</td>
                 <td>{{item?.visit?.governorate ?item?.visit?.governorate: '----'}}</td>
@@ -184,7 +187,7 @@
             </ng-container>
 
             <tr *ngIf="!filteredVisits?.length">
-              <td colspan="17" style="text-align: center">No visits found</td>
+              <td colspan="18" style="text-align: center">No visits found</td>
             </tr>
           </tbody>
         </table>

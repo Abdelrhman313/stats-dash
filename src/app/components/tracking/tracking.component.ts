@@ -1,6 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { NgbCalendar, NgbDateParserFormatter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+const moment = require('moment');
 
 @Component({
   selector: 'app-tracking',
@@ -18,24 +20,67 @@ export class TrackingComponent implements OnInit {
 
   loading = true
 
-  usersStats: any[] = []
-  filtredUsersStats: any[] = []
+  usersLocations: any[] = []
+  filtredUsersLocations: any[] = []
   exist: any
 
   maxDate = { year: new Date().getFullYear(), month: new Date().getUTCMonth() + 1, day: new Date().getDate() }
   filterTypeValue: any
-  constructor(private router: Router) { }
+
+  allUsers: any
+
+  systemUsersCollection: any
+  systemLocationsCollection: any
+
+  firestore: Firestore = inject(Firestore);
+
+  group: any
+  constructor(private router: Router) {
+    localStorage.removeItem('userMapInfo')
+    localStorage.removeItem('userMapPoints')
+
+    localStorage.getItem('group') == "ISIS" ? this.group = "Ausis" : this.group = localStorage.getItem('group');
+
+    this.getAllSystemUsers()
+    this.getAllSystemLocations()
+  }
 
   ngOnInit(): void {
-    this.getAllUsersData()
+  }
+
+
+  getAllSystemUsers() {
+    const itemCollection = collection(this.firestore, 'usersV2');
+    this.systemUsersCollection = collectionData(itemCollection);
+    this.systemUsersCollection.subscribe({
+      next: (res: any) => {
+        this.allUsers = res?.filter((item: any) => item?.group?.toLowerCase() == this.group?.toLowerCase())
+      },
+      error: (err: any) => {
+      }
+    })
+  }
+
+  locations: any
+  getAllSystemLocations() {
+    const itemCollection = collection(this.firestore, 'locationV2');
+    this.systemLocationsCollection = collectionData(itemCollection);
+    this.systemLocationsCollection.subscribe({
+      next: (res: any) => {
+        this.locations = res
+        this.getAllUsersData()
+
+      },
+      error: (err: any) => {
+      }
+    })
   }
 
   getAllUsersData() {
     this.loading = true;
-    if (localStorage.getItem('usersStats')) {
-      this.filtredUsersStats = JSON.parse(localStorage.getItem('usersStats') || '{}')
-      this.usersStats = JSON.parse(localStorage.getItem('usersStats') || '{}')
-
+    if (this.locations?.length) {
+      this.filtredUsersLocations = []
+      this.usersLocations = this.locations;
       this.exist = true
       this.loading = false;
     } else {
@@ -44,31 +89,77 @@ export class TrackingComponent implements OnInit {
     }
   }
 
-  goToMap(info: any) {
-    let data = { id: info?.id, lat: info?.lat, lon: info?.lon }
+  goToMap(userId: any, points: any, name: any, Date: any) {
+    let user = this.getUserName(userId);
+    let data = { id: user?.id, lat: user?.lat, lon: user?.lon }
     localStorage.setItem('userMapInfo', JSON.stringify(data))
+    localStorage.setItem('userMapPoints', JSON.stringify(points))
+    localStorage.setItem('name', name)
+    localStorage.setItem('Date', Date)
     this.router.navigateByUrl('map');
   }
 
-  applyFilter(event: Event, type: any) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    if (!filterValue) {
-      //empty filter, show all countries:
-      this.filtredUsersStats = this.usersStats;
-    } else {
-      if (type == 'username') {
-        this.filtredUsersStats = this.usersStats.filter(
-          obj => obj?.user?.username.toLowerCase().includes(filterValue.trim().toLowerCase())
-        );
-      }
+  filterDone: any = false
+  SalesPersonValue: any
+
+  groupedData: any
+  applyFilter() {
+    // if (this.SalesPersonValue && (!this.toDate && !this.fromDate)) {
+    //   console.log(this.SalesPersonValue);
+
+    //   this.filtredUsersLocations = this.usersLocations.filter(
+    //     obj => obj?.userId == this.SalesPersonValue
+    //   );
+    // }
+
+    // if (this.toDate && this.fromDate && !this.SalesPersonValue) {
+    //   this.filtredUsersLocations = this.usersLocations.filter(
+    //     obj => this.checkDate(obj?.date)
+    //   );
+    // }
+
+    if (this.SalesPersonValue && (this.toDate && this.fromDate)) {
+      this.filtredUsersLocations = this.usersLocations.filter(
+        obj => obj?.userId == this.SalesPersonValue
+      );
+
+      this.filtredUsersLocations = this.usersLocations.filter(
+        obj => this.checkDate(obj?.date)
+      );
+
+      this.groupedData = this.filtredUsersLocations.reduce((group: { [key: string]: any[] }, item) => {
+        if (!group[item.date]) {
+          group[item.date] = [];
+        }
+        group[item.date].push(item);
+        return group;
+      }, {});
+
+      let data: any[] = []
+      Object.keys(this.groupedData).forEach(ele => {
+        data?.push({ Date: ele, count: this.groupedData[ele]?.length, points: this.groupedData[ele], user: this.getUserName(this.SalesPersonValue) });
+      })
+
+      this.filtredUsersLocations = data;
+
     }
+
+    this.filterDone = true
+  }
+
+  getUserName(id: any) {
+
+    return this.allUsers?.find((user: any) => user?.id == id)
   }
 
   resetFilter() {
-    this.filtredUsersStats = this.usersStats;
+    this.filtredUsersLocations = [];
     this.filterTypeValue = null
-    // this.fromDate = null
-    // this.toDate = null
+    this.fromDate = null
+    this.toDate = null
+    this.SalesPersonValue = null
+    this.filterDone = false
+
   }
 
   onDateSelection(date: NgbDate) {
@@ -80,11 +171,6 @@ export class TrackingComponent implements OnInit {
       this.toDate = null;
       this.fromDate = date;
     }
-
-    // if (this.fromDate && this.toDate) {
-    //   this.filtredUsersStats = this.usersStats.filter(
-    //     obj => this.checkDate(obj?.visit?.dateOfVisit));
-    // }
   }
 
   isHovered(date: NgbDate) {
@@ -94,7 +180,6 @@ export class TrackingComponent implements OnInit {
   }
 
   isInside(date: NgbDate) {
-
     return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
   }
 

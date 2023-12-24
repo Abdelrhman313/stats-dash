@@ -39,16 +39,22 @@ ngb-progressbar.progress {
   content: "";
   position: absolute;
   top: 0;
-  left: 185px;
+  left: 280px;
+  /* left: 185px; */
   background: #999;
   width: 3px;
   height: 100%;
 }
 
 .stat h3 {
-  width: 200px;
+  /* width: 200px;
   max-width: 200px;
+  text-wrap: wrap; */
+
+  width: 300px;
+  max-width: 300px;
   text-wrap: wrap;
+  padding-right: 5px;
 }
 
 .stat h4 {

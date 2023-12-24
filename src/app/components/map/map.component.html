@@ -2,7 +2,21 @@
   <button class="btn btn-outline-secondary backBtn" (click)="back() ">Back </button>
 
   <h2>Map</h2>
+
   <div class="container">
+    <div class="d-flex" style="
+    gap: 5px;
+    font-size: 20px;
+    font-weight: 500;
+    flex-direction: column;
+    color: #006eb6;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px;">
+      <p class="m-0">User Name: {{name}}</p>
+      <p class="m-0">Date: {{Date}}</p>
+    </div>
+
     <!-- loading state -->
     <ng-container *ngIf="loading">
       <app-loading></app-loading>

@@ -27,22 +27,26 @@
         <div class="col-md-3 mb-3 mb-md-0" *ngIf="filterTypeValue == 1">
           <div class="form-group">
             <label for="SalesPerson" class="form-label">Sales Person</label>
-            <input id="SalesPerson" name="SalesPerson" ngModel #SalesPerson="ngModel" class="form-control"
-              (keyup)="applyFilter($event, 'username')" />
+            <select name="users" id="SalesPerson" ngModel #SalesPerson="ngModel" class="form-control"
+              (ngModelChange)="applyFilter($event, 'username', true)">
+              <option value="">----</option>
+              <ng-container *ngFor="let item of allUsers">
+                <option value="{{item?.username}}">{{item?.username}}</option>
+              </ng-container>
+            </select>
           </div>
         </div>
 
         <div class="col-md-7 mb-3 mb-md-0" *ngIf="filterTypeValue == 2">
-
           <form class="row row-cols-sm-auto">
-            <div class="col-12 w-100 mb-2">
+            <div class=" col-md-6 mb-2 mb-md-0">
               <label for="dateOfVisit" class="form-label"> From</label>
 
               <div class="dp-hidden position-absolute">
                 <div class="input-group">
                   <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
                     [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
-                    outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" [maxDate]="maxDate" />
+                    outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" [maxDate]="maxDate" autocomplete="off" />
                   <ng-template #t let-date let-focused="focused">
                     <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
                       [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
@@ -54,29 +58,26 @@
               </div>
               <div class="input-group">
                 <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
-                  [value]="formatter.format(fromDate)" (input)="fromDate = validateInput(fromDate, dpFromDate.value)" />
+                  [value]="formatter.format(fromDate)" (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
+                  autocomplete="off" />
                 <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()" type="button">
                   <i class="fa-solid fa-calendar-days"></i>
                 </button>
               </div>
             </div>
-            <div class="col-12 w-100">
+            <div class=" col-md-6 ">
               <label for="dateOfVisit" class="form-label"> To</label>
 
               <div class="input-group">
                 <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
-                  [value]="formatter.format(toDate)" (input)="toDate = validateInput(toDate, dpToDate.value)" />
+                  [value]="formatter.format(toDate)" (input)="toDate = validateInput(toDate, dpToDate.value)"
+                  autocomplete="off" />
                 <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()" type="button">
                   <i class="fa-solid fa-calendar-days"></i>
                 </button>
               </div>
             </div>
           </form>
-          <!-- <div class="form-group">
-            <label for="dateOfVisit" class="form-label"> Date Of Visit</label>
-            <input id="dateOfVisit" name="dateOfVisit" ngModel #dateOfVisit="ngModel" class="form-control"
-              (keyup)="applyFilter($event, 'dateOfVisit')" />
-          </div> -->
         </div>
 
 
@@ -142,6 +143,7 @@
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">Image</th>
               <th scope="col">Sales Person</th>
               <th scope="col">Group</th>
               <th scope="col">Sub Group</th>
@@ -166,6 +168,12 @@
 
               <tr>
                 <th scope="row">{{ i + 1 }}</th>
+                <th>
+                  <img src="{{ item?.visit?.image}}" alt="image" class="img-fluid" style="
+                  width: 120px;
+                  height: 120px;
+                  object-fit: fill;" />
+                </th>
                 <td> {{item?.username ?item?.username: '----'}} </td>
                 <td>{{ item?.group ?item?.group :'----'}}</td>
                 <td>{{ item?.subgroup ?item?.subgroup: '----'}}</td>

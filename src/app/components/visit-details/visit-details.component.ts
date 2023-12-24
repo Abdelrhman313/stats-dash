@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { NgbCalendar, NgbDateParserFormatter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
@@ -26,8 +27,19 @@ export class VisitDetailsComponent implements OnInit {
 
   maxDate = { year: new Date().getFullYear(), month: new Date().getUTCMonth() + 1, day: new Date().getDate() }
 
+  allUsers: any
+
+  systemUsersCollection: any
+
+  firestore: Firestore = inject(Firestore);
+
+  group: any
   constructor(private router: Router) {
+    localStorage.getItem('group') == "ISIS" ? this.group = "Ausis" : this.group = localStorage.getItem('group');
+
     localStorage.removeItem('visits')
+
+    this.getAllSystemUsers()
   }
 
   ngOnInit(): void {
@@ -46,6 +58,11 @@ export class VisitDetailsComponent implements OnInit {
             username: element?.user?.username,
             group: element?.user?.group,
             subgroup: element?.user?.subgroup,
+            info: {
+              id: element?.user?.id,
+              lat: element?.user?.lat,
+              lon: element?.user?.lon,
+            },
             visit: visit,
           }
         });
@@ -64,12 +81,31 @@ export class VisitDetailsComponent implements OnInit {
     }
   }
 
+  getAllSystemUsers() {
+    const itemCollection = collection(this.firestore, 'usersV2');
+    this.systemUsersCollection = collectionData(itemCollection);
+    this.systemUsersCollection.subscribe({
+      next: (res: any) => {
+        this.allUsers = res?.filter((item: any) => item?.group?.toLowerCase() == this.group?.toLowerCase())
+      },
+      error: (err: any) => {
+      }
+    })
+
+  }
+
   goToDashboard() {
     this.router.navigateByUrl('dashboard');
   }
 
-  applyFilter(event: Event, type: any) {
-    const filterValue = (event.target as HTMLInputElement).value;
+  applyFilter(event: any, type: any, select?: any) {
+    let filterValue = ''
+    if (select) {
+      filterValue = event;
+    } else {
+      filterValue = (event?.target as HTMLInputElement)?.value;
+    }
+
     if (!filterValue) {
       //empty filter, show all countries:
       this.filteredVisits = this.visits;
@@ -107,6 +143,7 @@ export class VisitDetailsComponent implements OnInit {
 
     }
   }
+
   filterTypeValue: any
   resetFilter() {
     this.filterTypeValue = 0

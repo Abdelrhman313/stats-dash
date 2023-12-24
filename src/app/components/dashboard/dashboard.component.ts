@@ -1,8 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiService } from 'src/app/services/api.service';
-import { Firestore, collectionData, collection, Timestamp, FirestoreModule, FirestoreError } from '@angular/fire/firestore';
-import { catchError, of, throwError } from 'rxjs';
+import { Firestore, collectionData, collection, Timestamp } from '@angular/fire/firestore';
+import { NgbCalendar, NgbDateParserFormatter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 const moment = require('moment');
 
@@ -39,12 +38,21 @@ interface Info {
 })
 export class DashboardComponent implements OnInit {
 
+
+  calendar = inject(NgbCalendar);
+  formatter = inject(NgbDateParserFormatter);
+
+  hoveredDate: NgbDate | null = null;
+  fromDate!: NgbDate | null
+  toDate!: NgbDate | null
   loading = true
 
+
+  maxDate = { year: new Date().getFullYear(), month: new Date().getUTCMonth() + 1, day: new Date().getDate() }
   group: any
   group2: any
   exist: any
-
+  customDate: any = false
   firestore: Firestore = inject(Firestore);
 
   systemGroupsCollection: any
@@ -137,6 +145,7 @@ export class DashboardComponent implements OnInit {
     if (find >= 0) { this.exist = true; this.group = groups[find]?.name; } else { this.exist = false }
   }
 
+  customSearch = false
   getAllCompletedVisits() {
 
     const itemCollection = collection(this.firestore, 'completed visits');
@@ -158,8 +167,12 @@ export class DashboardComponent implements OnInit {
         case 5:
           this.completedVisits = res?.filter((visit: any) => this.isYesterDay(visit?.completedDate));
           break;
+        case 6:
+          this.customSearch = true
+          this.completedVisits = res?.filter((visit: any) => this.checkDate(visit?.completedDate));
+          break;
         default:
-          this.completedVisits = res;
+          this.completedVisits = [];
           break;
       }
 
@@ -234,7 +247,9 @@ export class DashboardComponent implements OnInit {
       case 'Three Months':
         this.active = 4;
         break;
-
+      case 'custom date':
+        this.active = 6
+        break;
       default:
         this.active = 1;
         break;
@@ -306,5 +321,60 @@ export class DashboardComponent implements OnInit {
   back() {
     history.back()
     localStorage.removeItem('group')
+  }
+
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+      this.toDate = date;
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+
+    if (this.fromDate && this.toDate) {
+      this.filter('custom date')
+    }
+  }
+
+  isHovered(date: NgbDate) {
+    return (
+      this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate)
+    );
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return (
+      date.equals(this.fromDate) ||
+      (this.toDate && date.equals(this.toDate)) ||
+      this.isInside(date) ||
+      this.isHovered(date)
+    );
+  }
+
+  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+    const parsed = this.formatter.parse(input);
+    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  checkDate(date: any): any {
+    if (this.fromDate && this.toDate) {
+      let visitDate = date?.split('/')
+      const start = Date.parse(this.fromDate?.month + '/' + this.fromDate?.day + '/' + this.fromDate?.year);
+      const end = Date.parse(this.toDate?.month + '/' + this.toDate?.day + '/' + this.toDate?.year);
+      const d = Date.parse(visitDate[1] + '/' + visitDate[0] + '/' + visitDate[2]);
+      return d >= start && d <= end
+    }
+  }
+
+  resetDate() {
+    this.customDate = false;
+    this.toDate = null
+    this.fromDate = null
   }
 }

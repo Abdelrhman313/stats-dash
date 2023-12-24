@@ -9,27 +9,77 @@
         <ul class="list-unstyled d-flex w-100 justify-content-center align-items-center flex-wrap">
 
           <li>
-            <button [disabled]="loading" type="button" (click)="filter('Today'); active = 1"
+            <button [disabled]="loading" type="button" (click)="filter('Today');resetDate(); active = 1"
               class="{{ active == 1 ? 'active' : '' }}">Today</button>
           </li>
           <li>
-            <button [disabled]="loading" type="button" (click)="filter('yesterday'); active = 5"
+            <button [disabled]="loading" type="button" (click)="filter('yesterday');resetDate(); active = 5"
               class="{{ active == 5 ? 'active' : '' }}">Yesterday</button>
           </li>
           <li>
-            <button [disabled]="loading" type="button" (click)="filter('Week'); active = 2"
+            <button [disabled]="loading" type="button" (click)="filter('Week');resetDate(); active = 2"
               class="{{ active == 2 ? 'active' : '' }}">Week</button>
           </li>
           <li>
-            <button [disabled]="loading" type="button" (click)="filter('Month'); active = 3"
+            <button [disabled]="loading" type="button" (click)="filter('Month');resetDate(); active = 3"
               class="{{ active == 3 ? 'active' : '' }}">Month</button>
           </li>
           <li>
-            <button [disabled]="loading" type="button" (click)="filter('Three Months'); active = 4"
+            <button [disabled]="loading" type="button" (click)="filter('Three Months');resetDate(); active = 4"
               class="{{ active == 4 ? 'active' : '' }}">Three
               Months</button>
           </li>
+
+          <li>
+            <button [disabled]="loading" type="button" (click)="customDate = true; active = 6; usersStats = []"
+              class="{{ active == 6 ? 'active' : '' }}">
+              Custom Date
+            </button>
+          </li>
         </ul>
+
+
+        <div class="d-flex justify-content-center" *ngIf="customDate">
+          <form class="row row-cols-sm-auto">
+            <div class=" col-md-6  mb-2">
+              <label for="dateOfVisit" class="form-label"> From</label>
+
+              <div class="dp-hidden position-absolute">
+                <div class="input-group">
+                  <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
+                    [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+                    outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" [maxDate]="maxDate" autocomplete="off" />
+                  <ng-template #t let-date let-focused="focused">
+                    <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                      [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                      (mouseleave)="hoveredDate = null">
+                      {{ date.day }}
+                    </span>
+                  </ng-template>
+                </div>
+              </div>
+              <div class="input-group">
+                <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
+                  [value]="formatter.format(fromDate)" (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
+                  autocomplete="off" />
+                <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()" type="button">
+                  <i class="fa-solid fa-calendar-days"></i>
+                </button>
+              </div>
+            </div>
+            <div class=" col-md-6 ">
+              <label for="dateOfVisit" class="form-label"> To</label>
+
+              <div class="input-group">
+                <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
+                  [value]="formatter.format(toDate)" (input)="toDate = validateInput(toDate, dpToDate.value)" autocomplete="off"/>
+                <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()" type="button">
+                  <i class="fa-solid fa-calendar-days"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
 
@@ -39,7 +89,7 @@
     </ng-container>
 
     <!-- empty state -->
-    <ng-container *ngIf="(!exist || !usersStats?.length) && !loading">
+    <ng-container *ngIf="(!exist || !usersStats?.length) && !loading ">
       <div class="card card-transparent m-auto" style="max-width: max-content;">
         <div class="card-body text-center empty-state">
           <img src="/assets/empty.svg" width="100" height="100" alt="img" />

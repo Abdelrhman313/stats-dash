@@ -12,7 +12,7 @@ agm-map {
   letter-spacing: 0.5px;
   font-weight: 600;
   color: #101828;
-  margin-bottom: 50px;
+  margin-bottom: 25px;
   text-align: center;
 }
 
@@ -30,4 +30,55 @@ agm-map {
 
 ::ng-deep path.leaflet-interactive {
   fill: #0003;
+}
+
+::ng-deep img.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive {
+  width: 50px;
+  height: 50px;
+}
+
+::ng-deep .leaflet-popup {
+  padding: 10px !important;
+  width: 200px;
+  text-wrap: balance;
+  max-height: max-content !important;
+  background-color: #101828;
+  color: #fff;
+  left: -95px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 14px !important;
+  bottom: 10px !important;
+}
+
+::ng-deep .leaflet-popup .leaflet-popup-content-wrapper {
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  background: transparent;
+  box-shadow: none !important;
+  color: #fff !important;
+  min-height: 100%;
+}
+
+::ng-deep .leaflet-popup .leaflet-popup-tip {
+  background: #101828 !important;
+}
+
+::ng-deep .leaflet-popup .leaflet-popup-tip-container {
+  bottom: -20px;
+}
+
+::ng-deep .leaflet-popup .leaflet-popup-content {
+  text-align: center;
+  text-align: center;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+::ng-deep .leaflet-popup p {
+  margin: 5px 0 !important;
 }

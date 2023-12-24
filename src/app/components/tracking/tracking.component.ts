@@ -137,8 +137,10 @@ export class TrackingComponent implements OnInit {
 
       let data: any[] = []
       Object.keys(this.groupedData).forEach(ele => {
-        data?.push({ Date: ele, count: this.groupedData[ele]?.length, points: this.groupedData[ele], user: this.getUserName(this.SalesPersonValue) });
+        data?.push({ Date: ele?.split('/')[2] + '-' + ele?.split('/')[1] + '-' + ele?.split('/')[0], count: this.groupedData[ele]?.length, points: this.groupedData[ele], user: this.getUserName(this.SalesPersonValue) });
       })
+
+      data.sort((a, b) => new Date(a.Date).getTime() - new Date(b.Date).getTime());
 
       this.filtredUsersLocations = data;
 

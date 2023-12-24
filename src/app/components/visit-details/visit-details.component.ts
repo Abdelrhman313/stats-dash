@@ -66,8 +66,11 @@ export class VisitDetailsComponent implements OnInit {
             visit: visit,
           }
         });
+
         this.visits?.push(...data);
       });
+
+      this.visits?.sort((a, b) => a.visit?.completedTime?.seconds - b.visit?.completedTime?.seconds);
 
       localStorage.setItem('visits', JSON.stringify(this.visits))
       this.visitsTemp = JSON.parse(JSON.stringify(this.visits));

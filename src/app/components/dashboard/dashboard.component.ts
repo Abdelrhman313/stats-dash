@@ -217,6 +217,8 @@ export class DashboardComponent implements OnInit {
 
     users?.sort((a: any, b: any) => a.count - b.count);
 
+    this.usersStats = users;
+
     localStorage.setItem('usersStats', JSON.stringify(this.usersStats))
 
     this.usersStats = users?.reverse()?.slice(0, 10);

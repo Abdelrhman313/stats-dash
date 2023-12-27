@@ -71,7 +71,7 @@ export class VisitDetailsComponent implements OnInit {
         this.visits?.push(...data);
       });
 
-      this.visits?.sort((a, b) => a.visit?.completedTime?.seconds - b.visit?.completedTime?.seconds);
+      this.visits?.sort((a, b) => (a.visit?.completedTime?.seconds + (a.visit?.completedTime?.nanoseconds / 1000000000)) - (b.visit?.completedTime?.seconds + (b.visit?.completedTime?.nanoseconds / 1000000000)));
 
       localStorage.setItem('visits', JSON.stringify(this.visits))
       this.visitsTemp = JSON.parse(JSON.stringify(this.visits));
@@ -168,7 +168,7 @@ export class VisitDetailsComponent implements OnInit {
 
     if (this.fromDate && this.toDate) {
       this.filteredVisits = this.visits.filter(
-        obj => this.checkDate(obj?.visit?.dateOfVisit));
+        obj => this.checkDate(obj?.visit?.completedDate));
     }
   }
 
@@ -200,6 +200,7 @@ export class VisitDetailsComponent implements OnInit {
   checkDate(date: any): any {
     if (this.fromDate && this.toDate) {
       let visitDate = date?.split('/')
+
       const start = Date.parse(this.fromDate?.month + '/' + this.fromDate?.day + '/' + this.fromDate?.year);
       const end = Date.parse(this.toDate?.month + '/' + this.toDate?.day + '/' + this.toDate?.year);
       const d = Date.parse(visitDate[1] + '/' + visitDate[0] + '/' + visitDate[2]);

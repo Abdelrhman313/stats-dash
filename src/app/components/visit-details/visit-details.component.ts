@@ -1,7 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, TemplateRef, inject } from '@angular/core';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { NgbCalendar, NgbDateParserFormatter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDateParserFormatter, NgbDate, ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-visit-details',
@@ -34,7 +35,7 @@ export class VisitDetailsComponent implements OnInit {
   firestore: Firestore = inject(Firestore);
 
   group: any
-  constructor(private router: Router) {
+  constructor(private router: Router, private apiService: ApiService, private modalService: NgbModal) {
     localStorage.getItem('group') == "ISIS" ? this.group = "Ausis" : this.group = localStorage.getItem('group');
 
     localStorage.removeItem('visits')
@@ -213,5 +214,96 @@ export class VisitDetailsComponent implements OnInit {
   back() {
     history.back()
     localStorage.removeItem('visits')
+  }
+
+  exportElmToExcel(): void {
+    const edata = [];
+    const udt = {
+      data: [
+        { A: "Visits Details" }, // title
+        {
+          A: "#",
+          B: "Sales Person",
+          C: "Group",
+          D: "Sub Group",
+          E: "Classification",
+          F: "Address",
+          G: "Date Of Visit",
+          H: "Time",
+          I: "Date Of Next Visit",
+          J: "Distribution",
+          K: "Governorate",
+          L: "Is Mocking",
+          M: "Line",
+          N: "Customer Name",
+          O: "Note",
+          P: "Phone",
+          Q: "Specialty",
+          R: "Type",
+        },
+      ],
+      skipHeader: true,
+    };
+    this.filteredVisits.forEach((data, i) => {
+      udt.data.push({
+        A: (i + 1).toString(),
+        B: data?.username ? data?.username : '----',
+        C: data?.group ? data?.group : '----',
+        D: data?.subgroup ? data?.subgroup : '----',
+        E: data?.visit?.classy ? data?.visit?.classy : '----',
+        F: data?.visit?.address ? data?.visit?.address : '----',
+        G: data?.visit?.dateOfVisit ? data?.visit?.dateOfVisit : '----',
+        H: data?.visit?.time ? data?.visit?.time : '----',
+        I: data?.visit?.dateOfNextVisit ? data?.visit?.dateOfNextVisit : '----',
+        J: data?.visit?.dist ? data?.visit?.dist : '----',
+        K: data?.visit?.governorate ? data?.visit?.governorate : '----',
+        L: data?.visit?.isMocking ? data?.visit?.isMocking : '----',
+        M: data?.visit?.line ? data?.visit?.line : '----',
+        N: data?.visit?.searchName ? data?.visit?.searchName : '----',
+        O: data?.visit?.note ? data?.visit?.note : '----',
+        P: data?.visit?.phone ? data?.visit?.phone : '----',
+        Q: data?.visit?.specialty ? data?.visit?.specialty : '----',
+        R: data?.visit?.type ? data?.visit?.type : '----',
+      });
+    });
+    edata.push(udt);
+
+    const DateObj = new Date();
+    const dateNow =
+      DateObj.getFullYear() +
+      "-" +
+      ("0" + (DateObj.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("0" + DateObj.getDate()).slice(-2);
+    this.apiService.exportJsonToExcel(edata, "visits_details_" + dateNow);
+  }
+
+  closeResult = '';
+  selectedItem: any
+  open(content: TemplateRef<any>, item: any) {
+    this.selectedItem = item
+    this.modalService.open(content, { size: 'xl', centered: true }).result.then(
+      (result: any) => {
+        this.closeResult = `Closed with: ${result}`;
+        this.selectedItem = ''
+      },
+      (reason: any) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        this.selectedItem = ''
+      },
+    );
+  }
+
+  private getDismissReason(reason: any): string {
+    this.selectedItem = ''
+    switch (reason) {
+      case ModalDismissReasons.ESC:
+        return 'by pressing ESC';
+      case ModalDismissReasons.BACKDROP_CLICK:
+        return 'by clicking on a backdrop';
+      default:
+        return `with: ${reason}`;
+    }
+
   }
 }

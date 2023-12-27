@@ -24,8 +24,16 @@ agm-map {
   width: 40px;
   height: 40px;
   object-fit: cover;
-  top: -20px;
-  left: -20px;
+  top: -50px;
+  left: -25px;
+}
+
+::ng-deep img.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive.path2 {
+  top: -32px;
+  left: -15px;
+  width: 30px;
+  height: 32px;
+  object-fit: fill;
 }
 
 ::ng-deep path.leaflet-interactive {

@@ -144,6 +144,8 @@ export class TrackingComponent implements OnInit {
 
       this.filtredUsersLocations = data;
 
+      // console.log(this.filtredUsersLocations);
+
     }
 
     this.filterDone = true

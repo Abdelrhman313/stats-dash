@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Firestore, collectionData, collection, Timestamp } from '@angular/fire/firestore';
+import { Firestore, collectionData, collection, Timestamp, doc, getDocs, query, where, getDocsFromServer } from '@angular/fire/firestore';
 import { NgbCalendar, NgbDateParserFormatter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 const moment = require('moment');
@@ -106,6 +106,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllCompletedVisits()
+    // this.getData()
   }
 
   getDashboardGroups() {
@@ -151,6 +152,7 @@ export class DashboardComponent implements OnInit {
     const itemCollection = collection(this.firestore, 'completed visits');
     this.completedVisitsCollection = collectionData(itemCollection);
     this.completedVisitsCollection.subscribe((res: any) => {
+      localStorage.setItem('allVisits', JSON.stringify(res))
       switch (this.active) {
         case 1:
           this.completedVisits = res?.filter((visit: any) => this.isInToDay(visit?.completedDate));
@@ -379,4 +381,14 @@ export class DashboardComponent implements OnInit {
     this.toDate = null
     this.fromDate = null
   }
+
+  querySnapshot: any
+  // async getData() {
+  //   let username = false
+  //   console.log("Getting data!");
+  //   this.querySnapshot = (await getDocs(query(collection(this.firestore, 'usersV2'), where('isOnline', '==', username)))).docs.forEach
+  //     ((document: any) => {
+  //       console.log(document?.data());
+  //     });
+  // }
 }

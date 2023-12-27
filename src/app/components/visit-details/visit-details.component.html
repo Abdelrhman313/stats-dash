@@ -138,6 +138,11 @@
 
     <!-- display data -->
     <ng-container *ngIf="exist && usersStats?.length && !loading">
+      <div class="btns text-end mb-2">
+        <button type="button" class="btn btn-primary" (click)="exportElmToExcel()">
+          Export
+        </button>
+      </div>
       <div class="table-box position-relative">
         <table class="table table-striped  table-bordered">
           <thead>
@@ -168,7 +173,7 @@
 
               <tr>
                 <th scope="row">{{ i + 1 }}</th>
-                <th>
+                <th (click)="open(imgModal, item)">
                   <img src="{{ item?.visit?.image}}" alt="image" class="img-fluid" style="
                   width: 120px;
                   height: 120px;
@@ -203,3 +208,16 @@
     </ng-container>
   </div>
 </div>
+
+<ng-template #imgModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Visit # {{selectedItem?.visit?.dateOfVisit +' - '+selectedItem?.visit?.time}}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <img src="{{selectedItem?.visit?.image}}" alt="visit image" style="width: 100%;height: 74vh;object-fit: fill;">
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>

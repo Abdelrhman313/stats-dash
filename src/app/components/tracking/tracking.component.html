@@ -12,7 +12,7 @@
 
             <label for="SalesPerson" class="form-label">Sales Person</label>
             <select name="users" id="SalesPerson" [(ngModel)]="SalesPersonValue" #SalesPerson="ngModel"
-              class="form-control">
+              class="form-control" (ngModelChange)="filterDone=false;filtredUsersLocations=[]">
               <option value="">----</option>
               <ng-container *ngFor="let item of allUsers">
                 <option value="{{item?.id}}">{{item?.username}}</option>

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Firestore, collectionData, collection, Timestamp, doc, getDocs, query, where, getDocsFromServer } from '@angular/fire/firestore';
-import { NgbCalendar, NgbDateParserFormatter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDateParserFormatter, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 const moment = require('moment');
 
@@ -326,10 +326,14 @@ export class DashboardComponent implements OnInit {
     history.back()
     localStorage.removeItem('group')
   }
+  equals = (one: NgbDateStruct, two: NgbDateStruct) =>
+    one && two && two.year === one.year && two.month === one.month && two.day === one.day;
 
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && this.equals(date, this.fromDate)) {
+      this.toDate = this.fromDate;
     } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
     } else {

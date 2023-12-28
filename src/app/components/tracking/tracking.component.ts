@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { NgbCalendar, NgbDateParserFormatter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDateParserFormatter, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 const moment = require('moment');
 
 @Component({
@@ -35,12 +35,21 @@ export class TrackingComponent implements OnInit {
   firestore: Firestore = inject(Firestore);
 
   group: any
+
+  allVisits: any
+  allCustomers: any
   constructor(private router: Router) {
     localStorage.removeItem('userMapInfo')
     localStorage.removeItem('userMapPoints')
 
     localStorage.getItem('group') == "ISIS" ? this.group = "Ausis" : this.group = localStorage.getItem('group');
 
+
+    if (localStorage.getItem('allVisits')) {
+      this.allVisits = JSON.parse(localStorage.getItem('allVisits') || "")
+    } else {
+      this.allVisits = []
+    }
     this.getAllSystemUsers()
     this.getAllSystemLocations()
   }
@@ -48,6 +57,65 @@ export class TrackingComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  getAllCustomers(filterdLoacation: any) {
+    let customersCollerction: any
+    const itemCollection = collection(this.firestore, 'customersV2');
+    customersCollerction = collectionData(itemCollection);
+    customersCollerction.subscribe((res: any) => {
+      this.getLating(res, filterdLoacation)
+    })
+  }
+
+  customerPoints: any[] = []
+  getLating(customers: any, locations: any) {
+
+    this.allVisits = this.allVisits?.filter((item: any) => item?.userId == this.SalesPersonValue)
+
+    let dateVisits: any = []
+    this.allVisits?.forEach((element: any) => {
+      if (this.checkDate(element?.completedDate)) {
+        dateVisits.push(element)
+      }
+    });
+
+    customers?.forEach((element: any) => {
+      dateVisits?.forEach((el: any) => {
+        if (element?.image == el?.image) {
+          this.customerPoints?.push(element)
+        }
+      });
+    });
+
+    this.filtredUsersLocations = [...this.filtredUsersLocations, ...this.customerPoints]
+
+    this.groupedData = this.filtredUsersLocations.reduce((group: { [key: string]: any[] }, item) => {
+      if (!group[item.date]) {
+        group[item.date] = [];
+      }
+      group[item.date].push(item);
+      return group;
+    }, {});
+
+    let data: any[] = []
+    Object.keys(this.groupedData).forEach(ele => {
+      if (ele?.split('/').length > 1) {
+        data?.push({ Date: ele?.split('/')[2] + '-' + ele?.split('/')[1] + '-' + ele?.split('/')[0], count: this.groupedData[ele]?.length, points: this.groupedData[ele], user: this.getUserName(this.SalesPersonValue) });
+      } else {
+        let date: any = moment(new Date(ele)).format("DD/MM/YYYY")
+        data?.push({ Date: date?.split('/')[2] + '-' + date?.split('/')[1] + '-' + date?.split('/')[0], count: this.groupedData[ele]?.length, points: this.groupedData[ele], user: this.getUserName(this.SalesPersonValue) });
+
+      }
+    })
+
+    data.sort((a, b) => new Date(a.Date).getTime() - new Date(b.Date).getTime());
+
+    this.filtredUsersLocations = data;
+
+    this.filterDone = true
+
+    this.startFilter = false
+
+  }
 
   getAllSystemUsers() {
     const itemCollection = collection(this.firestore, 'usersV2');
@@ -100,10 +168,17 @@ export class TrackingComponent implements OnInit {
   }
 
   filterDone: any = false
+
+  startFilter: any = false
+
   SalesPersonValue: any
 
   groupedData: any
+
+
   applyFilter() {
+    this.startFilter = true
+    this.customerPoints = []
     // if (this.SalesPersonValue && (!this.toDate && !this.fromDate)) {
     //   console.log(this.SalesPersonValue);
 
@@ -127,28 +202,17 @@ export class TrackingComponent implements OnInit {
         obj => this.checkDate(obj?.date)
       );
 
-      this.groupedData = this.filtredUsersLocations.reduce((group: { [key: string]: any[] }, item) => {
-        if (!group[item.date]) {
-          group[item.date] = [];
-        }
-        group[item.date].push(item);
-        return group;
-      }, {});
+      this.getAllCustomers(this.filtredUsersLocations)
 
-      let data: any[] = []
-      Object.keys(this.groupedData).forEach(ele => {
-        data?.push({ Date: ele?.split('/')[2] + '-' + ele?.split('/')[1] + '-' + ele?.split('/')[0], count: this.groupedData[ele]?.length, points: this.groupedData[ele], user: this.getUserName(this.SalesPersonValue) });
-      })
 
-      data.sort((a, b) => new Date(a.Date).getTime() - new Date(b.Date).getTime());
+      // this.filtredUsersLocations?.push(...this.customerPoints)
 
-      this.filtredUsersLocations = data;
+
 
       // console.log(this.filtredUsersLocations);
 
     }
 
-    this.filterDone = true
   }
 
   getUserName(id: any) {
@@ -166,10 +230,18 @@ export class TrackingComponent implements OnInit {
 
   }
 
+  equals = (one: NgbDateStruct, two: NgbDateStruct) =>
+    one && two && two.year === one.year && two.month === one.month && two.day === one.day;
+
   onDateSelection(date: NgbDate) {
+
+
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+    } else if (this.fromDate && !this.toDate && this.equals(date, this.fromDate)) {
+      this.toDate = this.fromDate;
+    }
+    else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
     } else {
       this.toDate = null;

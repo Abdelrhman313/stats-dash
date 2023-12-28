@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, inject } from '@angular/core';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { NgbCalendar, NgbDateParserFormatter, NgbDate, ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDateParserFormatter, NgbDate, ModalDismissReasons, NgbModal, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -155,10 +155,14 @@ export class VisitDetailsComponent implements OnInit {
     this.fromDate = null
     this.toDate = null
   }
+  equals = (one: NgbDateStruct, two: NgbDateStruct) =>
+    one && two && two.year === one.year && two.month === one.month && two.day === one.day;
 
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && this.equals(date, this.fromDate)) {
+      this.toDate = this.fromDate;
     } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
     } else {

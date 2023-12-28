@@ -68,7 +68,7 @@
         <div class="col-md-3">
           <button class="btn btn-secondary me-2" *ngIf="SalesPersonValue || toDate || fromDate"
             (click)="resetFilter(); ">Reset</button>
-          <button class="btn btn-primary" [disabled]="!SalesPersonValue || !toDate || !fromDate"
+          <button class="btn btn-primary" [disabled]="!SalesPersonValue || !toDate || !fromDate || startFilter"
             (click)="applyFilter(); ">Show</button>
         </div>
       </div>

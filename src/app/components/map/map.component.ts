@@ -28,6 +28,7 @@ export class MapComponent implements OnInit {
 
   systemPointsCollection: any
   systemPoints: any
+
   paths: any[] = []
   paths2: any[] = []
 
@@ -36,21 +37,16 @@ export class MapComponent implements OnInit {
   name: any;
   Date: any;
 
-  allVisits: any
-  allCustomers: any
+
   constructor(private cdref: ChangeDetectorRef) {
     this.getAllUsersData()
 
-    if (localStorage.getItem('allVisits')) {
-      this.allVisits = JSON.parse(localStorage.getItem('allVisits') || "")
-    } else {
-      this.allVisits = []
-    }
 
     this.name = localStorage.getItem('name') ?? '';
     this.Date = localStorage.getItem('Date') ?? '';
 
-    this.getAllCustomers()
+    this.getAllPoints()
+
   }
 
   ngOnInit(): void {
@@ -60,37 +56,30 @@ export class MapComponent implements OnInit {
     this.cdref.detectChanges();
   }
 
-  getAllCustomers() {
-    let customersCollerction: any
-    const itemCollection = collection(this.firestore, 'customersV2');
-    customersCollerction = collectionData(itemCollection);
-    customersCollerction.subscribe((res: any) => {
-      this.getLating(res)
 
-    })
-  }
 
   customerPoints: any[] = []
-  getLating(customers: any) {
+  // this.getLating(res)
 
-    this.allVisits = this.allVisits?.filter((item: any) => item?.userId == this.user?.id)
+  // getLating(customers: any) {
 
-    let dateVisits: any = []
-    this.allVisits?.forEach((element: any) => {
-      if (this.checkDate(element?.completedDate)) {
-        dateVisits.push(element)
-      }
-    });
+  //   this.allVisits = this.allVisits?.filter((item: any) => item?.userId == this.user?.id)
 
-    customers?.forEach((element: any) => {
-      dateVisits?.forEach((el: any) => {
-        if (element?.image == el?.image) {
-          this.customerPoints?.push(element)
-        }
-      });
-    });
-    this.getAllPoints()
-  }
+  //   let dateVisits: any = []
+  //   this.allVisits?.forEach((element: any) => {
+  //     if (this.checkDate(element?.completedDate)) {
+  //       dateVisits.push(element)
+  //     }
+  //   });
+
+  //   customers?.forEach((element: any) => {
+  //     dateVisits?.forEach((el: any) => {
+  //       if (element?.image == el?.image) {
+  //         this.customerPoints?.push(element)
+  //       }
+  //     });
+  //   });
+  // }
 
   checkDate(date: any): any {
     if (this.Date) {
@@ -106,6 +95,7 @@ export class MapComponent implements OnInit {
     if (localStorage.getItem('userMapInfo') && localStorage.getItem('userMapPoints')) {
       this.user = JSON.parse(localStorage.getItem('userMapInfo') || '{}')
       this.systemPoints = JSON.parse(localStorage.getItem('userMapPoints') || '{}')
+      this.customerPoints = JSON.parse(localStorage.getItem('customerPoints') || '{}')
 
       this.mapCenterPosition = {
         lat: this.user?.lat,
@@ -128,7 +118,7 @@ export class MapComponent implements OnInit {
       this.paths?.push({
         lating: [item?.lat, item?.lon],
         info: {
-          userName: item?.userName,
+          userName: item?.userName ? item?.userName : item?.name,
           date: item?.date,
           time: item?.time,
           note: item?.note,
@@ -137,22 +127,24 @@ export class MapComponent implements OnInit {
       })
     })
 
-    this.customerPoints?.forEach((item: any) => {
-      this.paths2?.push({
-        lating: [item?.lat, item?.lon],
-        info: {
-          userName: item?.name,
-          date: item?.date,
-          time: item?.time,
-          note: item?.note,
-          type: 'check point'
-        }
+    if (this.customerPoints?.length) {
+      this.customerPoints?.forEach((item: any) => {
+        this.paths2?.push({
+          lating: [item?.lat, item?.lon],
+          info: {
+            userName: item?.name,
+            date: item?.date,
+            time: item?.time,
+            note: item?.note,
+            type: 'check point'
+          }
+        })
       })
-    })
+    }
 
     this.mapOptions = {
       layers: [
-        tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { maxZoom: 30, attribution: '...' }),
+        tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { maxZoom: 25, attribution: '...' }),
         marker([this.mapCenterPosition?.lat, this.mapCenterPosition?.lng], {
           icon: icon({
             iconUrl: '/assets/location.png',

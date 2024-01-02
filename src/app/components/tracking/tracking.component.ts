@@ -81,10 +81,19 @@ export class TrackingComponent implements OnInit {
     customers?.forEach((element: any) => {
       dateVisits?.forEach((el: any) => {
         if (element?.image == el?.image) {
-          this.customerPoints?.push(element)
+          this.customerPoints?.push({ ...element, pinType: 'customer' })
         }
       });
     });
+
+    if (this.filtredUsersLocations.length) {
+      this.filtredUsersLocations = this.filtredUsersLocations.map((item) => {
+        return {
+          ...item,
+          pinType: 'location'
+        }
+      })
+    }
 
     this.filtredUsersLocations = [...this.filtredUsersLocations, ...this.customerPoints]
 

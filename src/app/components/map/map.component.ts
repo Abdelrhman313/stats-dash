@@ -114,6 +114,7 @@ export class MapComponent implements OnInit {
   getAllPoints() {
     this.loading = true
 
+
     this.systemPoints?.forEach((item: any) => {
       this.paths?.push({
         lating: [item?.lat, item?.lon],
@@ -122,10 +123,12 @@ export class MapComponent implements OnInit {
           date: item?.date,
           time: item?.time,
           note: item?.note,
-          type: item?.description
+          type: item?.description,
+          pinType: item?.pinType
         }
       })
     })
+
 
     if (this.customerPoints?.length) {
       this.customerPoints?.forEach((item: any) => {
@@ -136,7 +139,8 @@ export class MapComponent implements OnInit {
             date: item?.date,
             time: item?.time,
             note: item?.note,
-            type: 'check point'
+            type: 'check point',
+            pinType: item?.pinType
           }
         })
       })
@@ -173,7 +177,8 @@ export class MapComponent implements OnInit {
 
       markers.push(marker(this.paths[index]['lating'], {
         icon: icon({
-          iconUrl: this.paths[index]['info']?.type == "attend" ? '/assets/pin2.png' : '/assets/pin.png',
+          // iconUrl: this.paths[index]['info']?.type == "attend" ? '/assets/pin2.png' : '/assets/pin.png',
+          iconUrl: this.paths[index]['info']?.pinType == "customer" ? '/assets/pin3.png' : '/assets/pin2.png',
         }),
       }).bindPopup(popupContent, { closeButton: false, closeOnClick: false, autoPan: true, keepInView: true }).openPopup(),)
     }
@@ -184,7 +189,8 @@ export class MapComponent implements OnInit {
 
         markers2.push(marker(this.paths2[index]['lating'], {
           icon: icon({
-            iconUrl: this.paths2[index]['info']?.type == "attend" ? '/assets/pin2.png' : '/assets/pin.png',
+            // iconUrl: this.paths2[index]['info']?.type == "attend" ? '/assets/pin2.png' : '/assets/pin.png',
+            iconUrl: this.paths2[index]['info']?.pinType == "customer" ? '/assets/pin3.png' : '/assets/pin2.png',
             className: 'path2'
           }),
         }).bindPopup(popupContent, { closeButton: false, closeOnClick: false, autoPan: true, keepInView: true }).openPopup(),)

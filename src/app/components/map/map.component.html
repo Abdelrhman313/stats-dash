@@ -3,7 +3,7 @@
 
   <h2>Map</h2>
 
-  <div class="container">
+  <div class="container-fluid">
     <div class="d-flex" style="
     gap: 5px;
     font-size: 20px;
@@ -35,7 +35,7 @@
 
     <div class="box" *ngIf="!loading && paths?.length">
 
-      <div style="height: 600px;" leaflet [leafletOptions]="mapOptions" [leafletZoom]="12" id="leafletmap"
+      <div style="height:75vh  ;" leaflet [leafletOptions]="mapOptions" [leafletZoom]="12" id="leafletmap"
         (leafletMapReady)="onMapReady2($event)">
       </div>
     </div>

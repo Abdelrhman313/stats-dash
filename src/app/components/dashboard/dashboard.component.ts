@@ -66,8 +66,10 @@ export class DashboardComponent implements OnInit {
   reduceVisitsAndGroupUsers: any
 
   usersStats: any
+  filteredUsersStats: any
 
   active: any = 1
+  active2: any = 1
 
   width: any
   constructor(private router: Router) {
@@ -155,23 +157,60 @@ export class DashboardComponent implements OnInit {
       localStorage.setItem('allVisits', JSON.stringify(res))
       switch (this.active) {
         case 1:
-          this.completedVisits = res?.filter((visit: any) => this.isInToDay(visit?.completedDate));
+          // this.completedVisits = res?.filter((visit: any) => this.isInToDay(visit?.completedDate) && visit?.userId == this.filterValue);
+          if (this.filterValue) {
+            this.completedVisits = res?.filter((visit: any) => this.isInToDay(visit?.completedDate) && visit?.userId == this.filterValue);
+          } else {
+            this.completedVisits = res?.filter((visit: any) => this.isInToDay(visit?.completedDate));
+          }
           break;
         case 2:
-          this.completedVisits = res?.filter((visit: any) => this.isInLastWeek(visit?.completedDate));
+          // this.completedVisits = res?.filter((visit: any) => this.isInLastWeek(visit?.completedDate));
+          if (this.filterValue) {
+            this.completedVisits = res?.filter((visit: any) => this.isInLastWeek(visit?.completedDate) && visit?.userId == this.filterValue);
+          } else {
+            this.completedVisits = res?.filter((visit: any) => this.isInLastWeek(visit?.completedDate));
+          }
           break;
         case 3:
-          this.completedVisits = res?.filter((visit: any) => this.isInLastMonths(visit?.completedDate));
+          // this.completedVisits = res?.filter((visit: any) => this.isInLastMonths(visit?.completedDate));
+          if (this.filterValue) {
+            this.completedVisits = res?.filter((visit: any) => this.isInLastMonths(visit?.completedDate) && visit?.userId == this.filterValue);
+          } else {
+            this.completedVisits = res?.filter((visit: any) => this.isInLastMonths(visit?.completedDate));
+          }
           break;
         case 4:
-          this.completedVisits = res?.filter((visit: any) => this.isInLast3Months(visit?.completedDate));
+          // this.completedVisits = res?.filter((visit: any) => this.isInLast3Months(visit?.completedDate));
+          if (this.filterValue) {
+            this.completedVisits = res?.filter((visit: any) => this.isInLast3Months(visit?.completedDate) && visit?.userId == this.filterValue);
+          } else {
+            this.completedVisits = res?.filter((visit: any) => this.isInLast3Months(visit?.completedDate));
+          }
           break;
         case 5:
-          this.completedVisits = res?.filter((visit: any) => this.isYesterDay(visit?.completedDate));
+          // this.completedVisits = res?.filter((visit: any) => this.isYesterDay(visit?.completedDate));
+          if (this.filterValue) {
+            this.completedVisits = res?.filter((visit: any) => this.isYesterDay(visit?.completedDate) && visit?.userId == this.filterValue);
+          } else {
+            this.completedVisits = res?.filter((visit: any) => this.isYesterDay(visit?.completedDate));
+          }
           break;
         case 6:
           this.customSearch = true
-          this.completedVisits = res?.filter((visit: any) => this.checkDate(visit?.completedDate));
+          if (this.filterValue) {
+            this.completedVisits = res?.filter((visit: any) => this.checkDate(visit?.completedDate) && visit?.userId == this.filterValue);
+          } else {
+            this.completedVisits = res?.filter((visit: any) => this.checkDate(visit?.completedDate));
+          }
+          // this.completedVisits = res?.filter((visit: any) => this.checkDate(visit?.completedDate));
+          break;
+        case 7:
+          // if (this.filterValue) {
+          //   this.completedVisits = res?.filter((visit: any) => visit.userId == this.filterValue);
+          // } else {
+          //   this.completedVisits = res
+          // }
           break;
         default:
           this.completedVisits = [];
@@ -193,13 +232,14 @@ export class DashboardComponent implements OnInit {
   }
 
   allSystemUsers: any
-
+  allUsers: any
   getAllUsers(data: any) {
     let usersCollerction: any
     const itemCollection = collection(this.firestore, 'usersV2');
     usersCollerction = collectionData(itemCollection);
     usersCollerction.subscribe((res: any) => {
       this.allSystemUsers = res;
+      this.allUsers = res?.filter((item: any) => item?.group?.toLowerCase() == this.group?.toLowerCase())
 
       this.setAllUsers(res, data);
     })
@@ -220,10 +260,12 @@ export class DashboardComponent implements OnInit {
     users?.sort((a: any, b: any) => a.count - b.count);
 
     this.usersStats = users;
+    this.filteredUsersStats = users;
 
     localStorage.setItem('usersStats', JSON.stringify(this.usersStats))
 
     this.usersStats = users?.reverse()?.slice(0, 10);
+    this.filteredUsersStats = users?.reverse();
 
     this.loading = false
   }
@@ -234,28 +276,36 @@ export class DashboardComponent implements OnInit {
     this.router.navigateByUrl('groups');
   }
 
-  filter(value: any) {
+  filter(value?: any) {
     switch (value) {
       case 'yesterday':
         this.active = 5;
+        this.active2 = 5;
         break;
       case 'Today':
         this.active = 1;
+        this.active2 = 1;
         break;
       case 'Week':
         this.active = 2;
+        this.active2 = 2;
         break;
       case 'Month':
         this.active = 3;
+        this.active2 = 3;
         break;
       case 'Three Months':
         this.active = 4;
+        this.active2 = 4;
         break;
       case 'custom date':
-        this.active = 6
+        this.active = 6;
+        this.active2 = 6;
+        break;
+      case 'sales person':
+        this.active = this.active2;
         break;
       default:
-        this.active = 1;
         break;
     }
 
@@ -384,6 +434,7 @@ export class DashboardComponent implements OnInit {
     this.customDate = false;
     this.toDate = null
     this.fromDate = null
+    this.filterValue = null
   }
 
   querySnapshot: any
@@ -395,4 +446,20 @@ export class DashboardComponent implements OnInit {
   //       console.log(document?.data());
   //     });
   // }
+  filterValue: any
+  applyFilter(event: any, type: any, select?: any) {
+    this.loading = true
+
+    if (select) {
+      this.filterValue = event;
+    } else {
+      this.filterValue = (event?.target as HTMLInputElement)?.value;
+    }
+
+    // this.filter('sales person');
+    this.filter();
+
+    this.loading = false
+  }
+
 }

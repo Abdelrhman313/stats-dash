@@ -128,6 +128,8 @@ export class MapComponent implements OnInit {
         }
       })
     })
+    // console.log(this.paths);
+
 
 
     if (this.customerPoints?.length) {
@@ -178,7 +180,7 @@ export class MapComponent implements OnInit {
       markers.push(marker(this.paths[index]['lating'], {
         icon: icon({
           // iconUrl: this.paths[index]['info']?.type == "attend" ? '/assets/pin2.png' : '/assets/pin.png',
-          iconUrl: this.paths[index]['info']?.pinType == "customer" ? '/assets/pin3.png' : '/assets/pin2.png',
+          iconUrl: index == 0 ? '/assets/start.png' : index == this.paths.length - 1 ? '/assets/end.png' : this.paths[index]['info']?.pinType == "customer" ? '/assets/pin3.png' : '/assets/pin2.png',
         }),
       }).bindPopup(popupContent, { closeButton: false, closeOnClick: false, autoPan: true, keepInView: true }).openPopup(),)
     }

@@ -80,7 +80,8 @@ export class TrackingComponent implements OnInit {
 
     customers?.forEach((element: any) => {
       dateVisits?.forEach((el: any) => {
-        if (element?.image == el?.image) {
+        // if (element?.image == el?.image && this.checkDate(element?.date)) {
+        if (element?.image == el?.image && element?.date == el?.dateOfVisit) {
           this.customerPoints?.push({ ...element, pinType: 'customer' })
         }
       });
